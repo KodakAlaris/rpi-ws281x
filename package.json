@@ -10,7 +10,6 @@
     "git-commit": "make git-commit",
     "git-revert": "make git-revert",
     "npm-publish": "make npm-publish"
-
   },
   "keywords": [
     "ws2811",
@@ -22,12 +21,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meg768/rpi-ws281x.git"
+    "url": "git+https://github.com/KodakAlaris/rpi-ws281x.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/meg768/rpi-ws281x/issues"
+    "url": "https://github.com/KodakAlaris/rpi-ws281x/issues"
   },
   "dependencies": {
     "nan": "^2.14.0"
