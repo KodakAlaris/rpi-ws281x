@@ -14,7 +14,6 @@
 #define DEFAULT_STRIP_TYPE          WS2811_STRIP_GRB
 
 static ws2811_t ws2811;
-using v8;
 
 NAN_METHOD(Addon::configure)
 {
@@ -67,11 +66,11 @@ NAN_METHOD(Addon::configure)
 		return Nan::ThrowError("configure requires an argument.");
 	}
 
-    Local<Value> ledDisplayOptions = Local<Object>::Cast(info[0]);
-    Local<Value> binLightOptions = Local<Object>::Cast(info[0]);
+    v8::Local<v8::Object> ledDisplayOptions = v8::Local<v8::Object>::Cast(info[0]);
+    v8::Local<v8::Object> binLightOptions = v8::Local<v8::Object>::Cast(info[0]);
 
-    Local<Value> ledDisplayBrightness = ledDisplayOptions->Get(Nan::New<String>("brightness").toLocalChecked());
-    Local<Value> binLightBrightness = binLightOptions->Get(Nan::New<String>("brightness").toLocalChecked());
+    v8::Local<v8::Value> ledDisplayBrightness = ledDisplayOptions->Get(Nan::New<String>("brightness").toLocalChecked());
+    v8::Local<v8::Value> binLightBrightness = binLightOptions->Get(Nan::New<String>("brightness").toLocalChecked());
     ws2811.channel[0].brightness = Nan::To<int>(ledDisplayBrightness).FromMaybe(ws2811.channel[0].brightness);
     ws2811.channel[1].brightness = Nan::To<int>(binLightBrightness).FromMaybe(ws2811.channel[0].brightness);
 
@@ -113,8 +112,8 @@ NAN_METHOD(Addon::render)
 
     v8::Local<v8::Uint32Array> array = info[0].As<v8::Uint32Array>();
 
-    Local<Uint32Array> ledDisplayArray = info[0].As<Uint32Array>();
-    Local<Uint32Array> binLightsArray = info[1].As<Uint32Array>();
+    v8::Local<v8::Uint32Array> ledDisplayArray = info[0].As<v8::Uint32Array>();
+    v8::Local<v8::Uint32Array> binLightsArray = info[1].As<v8::Uint32Array>();
     
     if ((uint32_t)(ledDisplayArray->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[0].count)) {
         return Nan::ThrowError("Size of pixels does not match.");
