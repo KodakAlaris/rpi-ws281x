@@ -67,7 +67,8 @@ NAN_METHOD(Addon::configure)
 	}
 
     v8::Local<v8::Object> ledDisplayOptions = v8::Local<v8::Object>::Cast(info[0]);
-    v8::Local<v8::Object> binLightOptions = v8::Local<v8::Object>::Cast(info[0]);
+    v8::Local<v8::Object> binLightOptions = v8::Local<v8::Object>::Cast(info[1]);
+    
 
     v8::Local<v8::Value> ledDisplayBrightness = ledDisplayOptions->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
     v8::Local<v8::Value> binLightBrightness = binLightOptions->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
