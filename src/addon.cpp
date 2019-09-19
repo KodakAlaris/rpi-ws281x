@@ -61,20 +61,6 @@ NAN_METHOD(Addon::configure)
     ws2811.channel[1].strip_type = DEFAULT_STRIP_TYPE;
     ws2811.channel[1].gamma = gammaCorrection;
 
-
-	if (info.Length() != 1 ) {
-		return Nan::ThrowError("configure requires an argument.");
-	}
-
-    v8::Local<v8::Object> ledDisplayOptions = v8::Local<v8::Object>::Cast(info[0]);
-    v8::Local<v8::Object> binLightOptions = v8::Local<v8::Object>::Cast(info[1]);
-    
-
-    v8::Local<v8::Value> ledDisplayBrightness = ledDisplayOptions->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
-    v8::Local<v8::Value> binLightBrightness = binLightOptions->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
-    ws2811.channel[0].brightness = Nan::To<int>(ledDisplayBrightness).FromMaybe(ws2811.channel[0].brightness);
-    ws2811.channel[1].brightness = Nan::To<int>(binLightBrightness).FromMaybe(ws2811.channel[0].brightness);
-
     if (ws2811_init(&ws2811)) {
         return Nan::ThrowError("configure(): ws2811_init() failed.");
     }
