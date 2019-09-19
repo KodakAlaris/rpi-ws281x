@@ -10,7 +10,6 @@
     "git-commit": "make git-commit",
     "git-revert": "make git-revert",
     "npm-publish": "make npm-publish"
-
   },
   "keywords": [
     "ws2811",
