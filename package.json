@@ -1,7 +1,7 @@
 {
-  "name": "rpi-ws281x",
+  "name": "rpi-ws281x_ka",
   "version": "1.0.28",
-  "description": "rpi-ws281x",
+  "description": "rpi-ws281x_ka",
   "main": "index.js",
   "scripts": {
     "goto-github": "make goto-github",
@@ -22,15 +22,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meg768/rpi-ws281x.git"
+    "url": "git+https://github.com/KodakAlaris/rpi-ws281x.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/meg768/rpi-ws281x/issues"
+    "url": "https://github.com/KodakAlaris/rpi-ws281x/issues"
   },
   "dependencies": {
     "nan": "^2.14.0"
   },  
-  "homepage": "https://github.com/meg768/rpi-ws281x#readme"
+  "homepage": "https://github.com/KodakAlaris/rpi-ws281x#readme"
 }
