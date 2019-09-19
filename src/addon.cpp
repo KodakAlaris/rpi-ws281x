@@ -69,9 +69,6 @@ NAN_METHOD(Addon::configure)
 
 	v8::Local<v8::Object> options = v8::Local<v8::Object>::Cast(info[0]);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // debug
-    v8::Local<v8::Value> debug = options->Get(Nan::New<v8::String>("debug").ToLocalChecked());
 
     ///////////////////////////////////////////////////////////////////////////
     // leds
@@ -85,64 +82,12 @@ NAN_METHOD(Addon::configure)
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // dma
-    if (true) {
-        v8::Local<v8::Value> dma = options->Get(Nan::New<v8::String>("dma").ToLocalChecked());
-
-        if (!dma->IsUndefined())
-            ws2811.dmanum = Nan::To<int>(dma).FromMaybe(ws2811.dmanum);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // gpio
-    if (true) {
-        v8::Local<v8::Value> gpio = options->Get(Nan::New<v8::String>("gpio").ToLocalChecked());
-
-        if (!gpio->IsUndefined())
-            ws2811.channel[0].gpionum = Nan::To<int>(gpio).FromMaybe(ws2811.channel[0].gpionum);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
     // brightness
     if (true) {
         v8::Local<v8::Value> brightness = options->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
 
         if (!brightness->IsUndefined())
             ws2811.channel[0].brightness = Nan::To<int>(brightness).FromMaybe(ws2811.channel[0].brightness);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // stripType/strip
-    if (true) {
-        v8::Local<v8::Value> stripType = options->Get(Nan::New<v8::String>("stripType").ToLocalChecked());
-
-        if (stripType->IsUndefined()) 
-            stripType = options->Get(Nan::New<v8::String>("strip").ToLocalChecked());
-
-        if (!stripType->IsUndefined()) {
-            v8::String::Utf8Value value(stripType->ToString());
-            string stripTypeValue = string(*value);        
-
-            if (stripTypeValue == "rgb") {
-                ws2811.channel[0].strip_type = WS2811_STRIP_RGB;
-            }
-            if (stripTypeValue == "rbg") {
-                ws2811.channel[0].strip_type = WS2811_STRIP_RBG;
-            }
-            if (stripTypeValue == "grb") {
-                ws2811.channel[0].strip_type = WS2811_STRIP_GRB;
-            }
-            if (stripTypeValue == "gbr") {
-                ws2811.channel[0].strip_type = WS2811_STRIP_GBR;
-            }
-            if (stripTypeValue == "brg") {
-                ws2811.channel[0].strip_type = WS2811_STRIP_BRG;
-            }
-            if (stripTypeValue == "bgr") {
-                ws2811.channel[0].strip_type = WS2811_STRIP_BGR;
-            }
-
-        }
     }
 
     if (ws2811_init(&ws2811)) {
