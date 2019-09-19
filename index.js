@@ -8,7 +8,12 @@ class Module {
     }
 
     configure(options) {
-        addon.configure(options);
+        addon.configure(
+            {
+                ledDisplayOptions: ledDisplayOptions || {brightness: 150},
+                binLightOptions: binLightOptions || {brightness: 150}
+            }
+        );
     }
 
     reset() {
