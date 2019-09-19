@@ -14,7 +14,7 @@
 #define DEFAULT_STRIP_TYPE          WS2811_STRIP_GRB
 
 static ws2811_t ws2811;
-
+using v8;
 
 NAN_METHOD(Addon::configure)
 {
@@ -121,31 +121,36 @@ NAN_METHOD(Addon::render)
 	Nan::HandleScope();
 
 	if (info.Length() != 2) {
-		return Nan::ThrowError("render() requires pixels and pixel mapping arguments.");
+		return Nan::ThrowError("render() requires 2 pixel Uint32Arrays.");
 	}
 
-    if (!info[0]->IsUint32Array())
+    if (!info[0]->IsUint32Array() || !info[1]->IsUint32Array())
 		return Nan::ThrowError("render() requires pixels to be an Uint32Array.");
 
-    if (!info[1]->IsUint32Array())
-		return Nan::ThrowError("render() requires pixels mapping to be an Uint32Array.");
-
     v8::Local<v8::Uint32Array> array = info[0].As<v8::Uint32Array>();
-    v8::Local<v8::Uint32Array> mapping = info[1].As<v8::Uint32Array>();
 
+    Local<Uint32Array> ledDisplayArray = info[0].As<Uint32Array>();
+    Local<Uint32Array> binLightsArray = info[1].As<Uint32Array>();
     
-    if ((uint32_t)(array->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[0].count))
-		return Nan::ThrowError("Size of pixels does not match.");
+    if ((uint32_t)(ledDisplayArray->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[0].count)) {
+        return Nan::ThrowError("Size of pixels does not match.");
+    }
 
-    if ((uint32_t)(mapping->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[0].count))
-		return Nan::ThrowError("Size of pixel mapping does not match.");
+    if ((uint32_t)(binLightsArray->Buffer()->GetContents().ByteLength()) != (uint32_t)(4 * ws2811.channel[1].count)) {
+        return Nan::ThrowError("Size of pixels does not match.");
+    }
 
-    uint32_t *pixels = (uint32_t *)array->Buffer()->GetContents().Data();
-    uint32_t *map = (uint32_t *)mapping->Buffer()->GetContents().Data();
-    uint32_t *leds = ws2811.channel[0].leds;
+    uint32_t *ledDisplayPixels = (uint32_t *) ledDisplayArray->Buffer()->GetContents().Data();
+    uint32_t *binLightsPixels = (uint32_t *) binLightsArray->Buffer()->GetContents().Data();
+    uint32_t *ledDisplayLeds = ws2811.channel[0].leds;
+    uint32_t *binLightLeds = ws2811.channel[1].leds; 
 
     for (int i = 0; i < ws2811.channel[0].count; i++) {
-        leds[i] = pixels[map[i]];
+        ledDisplayLeds[i] = ledDisplayPixels[i];
+    }
+
+    for (int i = 0; i < ws2811.channel[1].count; i++) {
+        binLightLeds[i] = binLightsPixels[i];
     }
 
     ws2811_render(&ws2811);
