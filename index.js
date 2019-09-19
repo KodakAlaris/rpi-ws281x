@@ -3,44 +3,94 @@ var addon = require(path.join(__dirname, "build", "Release", "rpi-ws281x.node"))
 
 class Module {
     constructor() {
-        this.c1leds = undefined;
-        this.c2leds = undefined;
+        this.map  = undefined;
+        this.leds = undefined;
     }
 
     configure(options) {
-        let channel1 = options.channel1;
-        let channel2 = options.channel2;
+        var {width, height, map, leds, ...options} = options;
+        
+        if (width != undefined || height != undefined) {
 
-        if (channel1.leds === undefined) {
-            throw new Error(`Channel 0 LEDs must be defined.`);
+            if (width == undefined) {
+                throw new Error('Must specify width if height is specified.');
+            }
+
+            if (height == undefined) {
+                throw new Error('Must specify height if width is specified.');
+            }
+
+            if (leds != undefined) {
+                throw new Error('Please do not specify leds when both width and height are specified.');
+            }
+
+            leds = width * height;
+
+            if (typeof map == 'string') {
+                if (map == 'matrix') {
+                    map = new Uint32Array(width * height);
+        
+                    for (var i = 0; i < map.length; i++) 
+                        map[i] = i;
+        
+                }
+                else if (map == 'alternating-matrix') {
+                    map = new Uint32Array(width * height);
+        
+                    for (var i = 0; i < map.length; i++) {
+                        var row = Math.floor(i / width), col = i % width;
+                
+                        if ((row % 2) === 0) {
+                            map[i] = i;
+                        }
+                        else {
+                            map[i] = (row+1) * width - (col+1);
+                        }
+                    }        
+                }
+            }
         }
 
-        this.c1leds = channel1.leds;
-        if (channel2.leds !== undefined) {
-            this.c2leds = channel2.leds;
+        // Make sure the number of leds are specified
+        if (leds == undefined) {
+            throw new Error('Number of leds must be defined. Either by leds or by width and height.');
         }
-        addon.configure({channel1, channel2});
+    
+        // If no map specified, create a default one...
+        if (map == undefined) {
+            map = new Uint32Array(leds);
+
+            for (var i = 0; i < leds; i++)
+                map[i] = i;
+        }
+        
+        // Make sure we have a correct instance of pixel mapping
+        if (!(map instanceof Uint32Array))
+            throw new Error('Pixel mapping must be an Uint32Array.');
+
+        if (map.length != leds) 
+            throw new Error('Pixel mapping array must be of the same size as the number of leds.');
+
+        this.map  = map;
+        this.leds = leds;
+
+        addon.configure({...options, leds:leds});
     }
 
     reset() {
-        if (this.c1leds !== undefined && this.c2leds === undefined) {
-            this.render(new Uint32Array(this.c1leds), null);
-        } else {
-            this.render(new Uint32Array(this.c1leds), new Uint32Array(this.c2leds));
+        if (this.leds != undefined) {
+            this.render(new Uint32Array(this.leds));
+            addon.reset();    
         }
-        addon.reset();
     }
 
     sleep(ms) {
         addon.sleep(ms);
     }
 
-    render(c1Pixels, c2Pixels = null) {
-        if (c1Pixels && !c2Pixels) {
-            addon.render(c1Pixels);
-        } else if (c1Pixels && c2Pixels) {
-            addon.render(c1Pixels, c2Pixels);
-        }
+    render(pixels) {
+        if (this.map != undefined)
+            addon.render(pixels, this.map);
     }
 }
 

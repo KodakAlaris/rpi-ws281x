@@ -9,7 +9,7 @@ git-commit:
 	git add -A && git commit -m '-' && git push
 
 goto-github:
-	open https://github.com/KodakAlaris/rpi-ws281x
+	open https://github.com/meg768/rpi-ws281x
 
 goto-npm:
 	open https://www.npmjs.com/package/rpi-ws281x
