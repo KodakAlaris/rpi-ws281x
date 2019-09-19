@@ -67,28 +67,13 @@ NAN_METHOD(Addon::configure)
 		return Nan::ThrowError("configure requires an argument.");
 	}
 
-	v8::Local<v8::Object> options = v8::Local<v8::Object>::Cast(info[0]);
+    Local<Value> ledDisplayOptions = Local<Object>::Cast(info[0]);
+    Local<Value> binLightOptions = Local<Object>::Cast(info[0]);
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    // leds
-    if (true) {
-        v8::Local<v8::Value> leds = options->Get(Nan::New<v8::String>("leds").ToLocalChecked());
-
-        if (!leds->IsUndefined())
-            ws2811.channel[0].count = Nan::To<int>(leds).FromMaybe(ws2811.channel[0].count);
-        else
-            return Nan::ThrowTypeError("configure(): leds must be defined");
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // brightness
-    if (true) {
-        v8::Local<v8::Value> brightness = options->Get(Nan::New<v8::String>("brightness").ToLocalChecked());
-
-        if (!brightness->IsUndefined())
-            ws2811.channel[0].brightness = Nan::To<int>(brightness).FromMaybe(ws2811.channel[0].brightness);
-    }
+    Local<Value> ledDisplayBrightness = ledDisplayOptions->Get(Nan::New<String>("brightness").toLocalChecked());
+    Local<Value> binLightBrightness = binLightOptions->Get(Nan::New<String>("brightness").toLocalChecked());
+    ws2811.channel[0].brightness = Nan::To<int>(ledDisplayBrightness).FromMaybe(ws2811.channel[0].brightness);
+    ws2811.channel[1].brightness = Nan::To<int>(binLightBrightness).FromMaybe(ws2811.channel[0].brightness);
 
     if (ws2811_init(&ws2811)) {
         return Nan::ThrowError("configure(): ws2811_init() failed.");
@@ -101,7 +86,6 @@ NAN_METHOD(Addon::configure)
 NAN_METHOD(Addon::reset)
 {
 	Nan::HandleScope();
-
 
     if (ws2811.freq != 0) {
         memset(ws2811.channel[0].leds, 0, sizeof(uint32_t) * ws2811.channel[0].count);
