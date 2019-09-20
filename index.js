@@ -7,8 +7,12 @@ class Module {
         this.binLedCount = 6;
     }
 
-    configure(options) {
-        addon.configure();
+    configure(options = null) {
+        if (options === null) {
+            addon.configure();
+        } else {
+            addon.configure(options);
+        }
     }
 
     reset() {
