@@ -61,6 +61,20 @@ NAN_METHOD(Addon::configure)
     ws2811.channel[1].strip_type = DEFAULT_STRIP_TYPE;
     ws2811.channel[1].gamma = gammaCorrection;
 
+    if (info.Length() == 1) {
+        v8::Local<v8::Object> options = v8::Local<v8::Object>::Cast(info[0]);
+        v8::Local<v8::Value> panelBrightness = options->Get(Nan::New<v8::String>("panelBrightness").ToLocalChecked());
+        v8::Local<v8::Value> binBrightness = options->Get(Nan::New<v8::String>("binBrightness").ToLocalChecked());
+
+        if (!panelBrightness->IsUndefined()) {
+            ws2811.channel[0].brightness = Nan::To<int>(panelBrightness).FromMaybe(ws2811.channel[0].brightness);
+        }
+
+        if (!binBrightness->IsUndefined()) {
+            ws2811.channel[1].brightness = Nan::To<int>(binBrightness).FromMaybe(ws2811.channel[1].brightness);
+        }
+    }
+
     if (ws2811_init(&ws2811)) {
         return Nan::ThrowError("configure(): ws2811_init() failed.");
     }
