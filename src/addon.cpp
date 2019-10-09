@@ -8,7 +8,7 @@
 #define DEFAULT_GPIO_PIN_CH2        13
 
 #define DEFAULT_LED_COUNT_CH1       256
-#define DEFAULT_LED_COUNT_CH2       6
+#define DEFAULT_LED_COUNT_CH2       3
 
 #define DEFAULT_BRIGHTNESS          150
 #define DEFAULT_STRIP_TYPE          WS2811_STRIP_GRB
