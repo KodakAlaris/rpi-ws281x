@@ -664,6 +664,10 @@ void ws2811_cleanup(ws2811_t *ws2811)
 static int set_driver_mode(ws2811_t *ws2811, int gpionum)
 {
     int gpionum2;
+    fprintf(stdout, "in set_driver_mode -- gpionum: %d\n", gpionum);
+    if (ws2811->channel[1].gpionum != NULL) {
+        fprintf(stdout, "GPIONUM2: %d\n", ws2811->channel[1].gpionum);
+    }
 
     if (gpionum == 18 || gpionum == 12) {
         ws2811->device->driver_mode = PWM;
@@ -692,6 +696,7 @@ static int set_driver_mode(ws2811_t *ws2811, int gpionum)
 
 static int check_hwver_and_gpionum(ws2811_t *ws2811)
 {
+    fprintf(stdout, "in check_hwver_and_gpionum\n");
     const rpi_hw_t *rpi_hw;
     int hwver, gpionum;
     int gpionums_B1[] = { 10, 18, 21 };
@@ -741,6 +746,7 @@ static int check_hwver_and_gpionum(ws2811_t *ws2811)
         for ( i = 0; i < (int)(sizeof(gpionums_40p) / sizeof(gpionums_40p[0])); i++)
         {
             if (gpionums_40p[i] == gpionum) {
+                fprintf(stdout, "in gpionums_40p loop\n");
                 // Set driver mode (PWM, PCM, or SPI)
                 return set_driver_mode(ws2811, gpionum);
             }
@@ -983,6 +989,7 @@ ws2811_return_t ws2811_init(ws2811_t *ws2811)
         ws2811_channel_t *channel = &ws2811->channel[chan];
 
         channel->leds = malloc(sizeof(ws2811_led_t) * channel->count);
+        fprintf(stdout, "allocating %d leds for channel %d\n", channel->count, chan);
         if (!channel->leds)
         {
             ws2811_cleanup(ws2811);
