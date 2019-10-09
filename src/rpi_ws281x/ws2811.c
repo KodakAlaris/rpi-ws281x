@@ -669,7 +669,7 @@ static int set_driver_mode(ws2811_t *ws2811, int gpionum)
         ws2811->device->driver_mode = PWM;
         // Check gpio for PWM1 (2nd channel) is OK if used
         gpionum2 = ws2811->channel[1].gpionum;
-        fprintf(stdout, "gpionum for channel 2: $d\n", gpionum2);
+        fprintf(stdout, "gpionum for channel 2: %d\n", gpionum2);
         if (gpionum2 == 0 || gpionum2 == 13 || gpionum2 == 19) {
             return 0;
         }
