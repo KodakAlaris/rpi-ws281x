@@ -97,7 +97,21 @@ NAN_METHOD(Addon::reset)
     ws2811.freq = 0;
 
     info.GetReturnValue().Set(Nan::Undefined());
+}
 
+NAN_METHOD(Addon::resetOnly)
+{
+	Nan::HandleScope();
+
+    if (ws2811.freq != 0) {
+        memset(ws2811.channel[0].leds, 0, sizeof(uint32_t) * ws2811.channel[0].count);
+        memset(ws2811.channel[1].leds, 0, sizeof(uint32_t) * ws2811.channel[1].count);
+        ws2811_fini(&ws2811);
+    }
+
+    ws2811.freq = 0;
+
+    info.GetReturnValue().Set(Nan::Undefined());
 }
 
 NAN_METHOD(Addon::render)
@@ -159,6 +173,7 @@ NAN_MODULE_INIT(initAddon)
 	Nan::SetMethod(target, "configure",  Addon::configure);
 	Nan::SetMethod(target, "render",     Addon::render);
 	Nan::SetMethod(target, "reset",      Addon::reset);
+    Nan::SetMethod(target, "resetOnly",  Addon::resetOnly);
 }
 
 

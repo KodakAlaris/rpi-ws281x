@@ -21,7 +21,7 @@ class Module {
     }
 
     resetOnly() {
-        addon.reset();
+        addon.resetOnly();
     }
 
     sleep(ms) {
