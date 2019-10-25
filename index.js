@@ -20,6 +20,10 @@ class Module {
         addon.reset();    
     }
 
+    resetOnly() {
+        addon.reset();
+    }
+
     sleep(ms) {
         addon.sleep(ms);
     }
