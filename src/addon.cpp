@@ -8,7 +8,7 @@
 #define DEFAULT_GPIO_PIN_CH2        13
 
 #define DEFAULT_LED_COUNT_CH1       256
-#define DEFAULT_LED_COUNT_CH2       3
+#define DEFAULT_LED_COUNT_CH2       4
 
 #define DEFAULT_BRIGHTNESS          150
 #define DEFAULT_STRIP_TYPE          WS2811_STRIP_GRB
@@ -57,22 +57,22 @@ NAN_METHOD(Addon::configure)
     ws2811.channel[1].gpionum = DEFAULT_GPIO_PIN_CH2;
     ws2811.channel[1].count = DEFAULT_LED_COUNT_CH2;
     ws2811.channel[1].invert = 0;
-    ws2811.channel[1].brightness = DEFAULT_BRIGHTNESS;
+    ws2811.channel[1].brightness = 255; // Max brightness was wanted
     ws2811.channel[1].strip_type = DEFAULT_STRIP_TYPE;
     ws2811.channel[1].gamma = gammaCorrection;
 
     if (info.Length() == 1) {
         v8::Local<v8::Object> options = v8::Local<v8::Object>::Cast(info[0]);
         v8::Local<v8::Value> panelBrightness = options->Get(Nan::New<v8::String>("panelBrightness").ToLocalChecked());
-        v8::Local<v8::Value> binBrightness = options->Get(Nan::New<v8::String>("binBrightness").ToLocalChecked());
+        //v8::Local<v8::Value> binBrightness = options->Get(Nan::New<v8::String>("binBrightness").ToLocalChecked());
 
         if (!panelBrightness->IsUndefined()) {
             ws2811.channel[0].brightness = Nan::To<int>(panelBrightness).FromMaybe(ws2811.channel[0].brightness);
         }
 
-        if (!binBrightness->IsUndefined()) {
-            ws2811.channel[1].brightness = Nan::To<int>(binBrightness).FromMaybe(ws2811.channel[1].brightness);
-        }
+        // if (!binBrightness->IsUndefined()) {
+        //     ws2811.channel[1].brightness = Nan::To<int>(binBrightness).FromMaybe(ws2811.channel[1].brightness);
+        // }
     }
 
     if (ws2811_init(&ws2811)) {

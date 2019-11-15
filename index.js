@@ -4,7 +4,7 @@ let addon = require(path.join(__dirname, "build", "Release", "rpi-ws281x.node"))
 class Module {
     constructor() {
         this.displayLedCount = 256;
-        this.binLedCount = 3;
+        this.binLedCount = 4;
     }
 
     configure(options = null) {
